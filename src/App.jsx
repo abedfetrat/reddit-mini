@@ -1,4 +1,5 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -11,11 +12,20 @@ const theme = createTheme({
   },
 });
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <div>Home</div>
+  }
+]);
+
 function App() {
   return (
     <>
       <CssBaseline />
-      <ThemeProvider theme={theme}></ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </>
   );
 }
