@@ -2,6 +2,7 @@ import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootRoute from "./routes/RootRoute/RootRout";
+import SubredditRoute from "./routes/SubredditRoute/SubredditRoute";
 
 const theme = createTheme({
   palette: {
@@ -37,7 +38,12 @@ function App() {
           onRemoveSubreddit={handleRemoveSubreddit}
         />
       ),
-      children: [], // TODO add nested routes
+      children: [
+        {
+          path: "r/:subreddit",
+          element: <SubredditRoute searchTerm={searchTerm} />
+        }
+      ],
     },
   ]);
 
