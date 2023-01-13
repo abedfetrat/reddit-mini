@@ -3,6 +3,7 @@ import { useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootRoute from "./routes/RootRoute/RootRout";
 import SubredditRoute from "./routes/SubredditRoute/SubredditRoute";
+import NoSelection from "./routes/RootRoute/NoSelection";
 
 const theme = createTheme({
   palette: {
@@ -39,6 +40,10 @@ function App() {
         />
       ),
       children: [
+        {
+          index: true,
+          element: <NoSelection />
+        },
         {
           path: "r/:subreddit",
           element: <SubredditRoute searchTerm={searchTerm} />
