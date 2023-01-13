@@ -4,6 +4,7 @@ import { IconButton } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { alpha, styled } from "@mui/material/styles";
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const StyledSearch = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,6 +54,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function Search({ setSearchTerm }) {
+  const { subreddit } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const timeoutRef = useRef();
   const [text, setText] = useState("");
 
@@ -65,6 +69,14 @@ function Search({ setSearchTerm }) {
     }, 500);
   }, [text]);
 
+  const handleChange = ({ target }) => {
+    setText(target.value);
+    // If currently not in subreddit route, then route to it. 
+    if (subreddit && location.pathname !== `/r/${subreddit}`) {
+      navigate(`r/${subreddit}`);
+    }
+  };
+
   return (
     <StyledSearch>
       <SearchIconWrapper>
@@ -74,7 +86,7 @@ function Search({ setSearchTerm }) {
         placeholder="Search for posts…"
         inputProps={{ "aria-label": "search for posts" }}
         value={text}
-        onChange={({ target }) => setText(target.value)}
+        onChange={handleChange}
         onKeyDown={({ key }) => key === "Escape" && setText("")}
       />
       {text.length > 0 && (
