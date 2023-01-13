@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootRoute from "./routes/RootRoute/RootRout";
 import SubredditRoute from "./routes/SubredditRoute/SubredditRoute";
 import NoSelection from "./routes/RootRoute/NoSelection";
+import PostRoute from "./routes/PostRoute/PostRoute";
 
 const theme = createTheme({
   palette: {
@@ -47,6 +48,10 @@ function App() {
         {
           path: "r/:subreddit",
           element: <SubredditRoute searchTerm={searchTerm} />
+        },
+        {
+          path: "r/:subreddit/comments/:commentId",
+          element: <PostRoute />
         }
       ],
     },

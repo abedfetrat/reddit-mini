@@ -1,7 +1,9 @@
 import {
-    Box,
-    CircularProgress, List,
-    ListItem, Typography
+  Box,
+  CircularProgress,
+  List,
+  ListItem,
+  Typography,
 } from "@mui/material";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +11,7 @@ import { Post, PostSkeleton } from "../../components/Post";
 
 function Posts({ posts = [], hasMore, isLoading, onLoadMore }) {
   const navigate = useNavigate();
-
+  
   if (isLoading) {
     return (
       <List disablePadding>
@@ -48,7 +50,12 @@ function Posts({ posts = [], hasMore, isLoading, onLoadMore }) {
       <List disablePadding sx={{ mb: 4 }}>
         {posts.map((post, index) => (
           <ListItem key={post.id + index} disableGutters>
-            <Post post={post} onClick={() => navigate(`comments/${post.id}`)} />
+            <Post
+              post={post}
+              onClick={() =>
+                navigate(`comments/${post.id}`, { state: { post: post } })
+              }
+            />
           </ListItem>
         ))}
       </List>
