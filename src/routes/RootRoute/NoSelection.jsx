@@ -4,7 +4,12 @@ import Center from "../../components/Center";
 function NoSelection() {
   return (
     <Center>
-      <Typography fontSize={18} fontWeight={500} color="grey">
+      <Typography
+        fontSize={18}
+        fontWeight={500}
+        textAlign="center"
+        color="grey"
+      >
         Select a subreddit from the menu to view posts
       </Typography>
     </Center>
