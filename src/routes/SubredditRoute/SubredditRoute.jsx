@@ -3,14 +3,16 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Center from "../../components/Center";
 import Error from "../../components/Error";
-import Posts from "./Posts";
+import useSessionStorageState from "../../hooks/useSessionStorageState";
 import { fetchSubredditPosts } from "../../utils/api";
+import Posts from "./Posts";
 
-function SubredditRoute({ searchTerm }) {
+function SubredditRoute({ searchTerm, prevSearchTerm }) {
   const { subreddit } = useParams();
-
-  const [posts, setPosts] = useState([]);
-  const [nextPostsId, setNextPostsId] = useState(null);
+  const [allPosts, setAllPosts] = useSessionStorageState("posts", {});
+  const [nextPosts, setNextPosts] = useSessionStorageState("nextPosts", {});
+  const posts = allPosts[subreddit];
+  const nextPostsId = nextPosts[subreddit];
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -19,8 +21,18 @@ function SubredditRoute({ searchTerm }) {
     setError(null);
     try {
       const result = await fetchSubredditPosts(subreddit, searchTerm, null);
-      setPosts(result.posts);
-      setNextPostsId(result.nextPostsId);
+      setAllPosts((prev) => {
+        return {
+          ...prev,
+          [subreddit]: result.posts,
+        };
+      });
+      setNextPosts((prev) => {
+        return {
+          ...prev,
+          [subreddit]: result.nextPostsId,
+        };
+      });
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -30,16 +42,34 @@ function SubredditRoute({ searchTerm }) {
 
   const fetchMorePosts = async () => {
     try {
-      const result = await fetchSubredditPosts(subreddit, null, nextPostsId);
-      setPosts((prev) => [...prev, ...result.posts]);
-      setNextPostsId(result.nextPostsId);
+      const result = await fetchSubredditPosts(
+        subreddit,
+        searchTerm,
+        nextPostsId
+      );
+      setAllPosts((prev) => {
+        return {
+          ...prev,
+          [subreddit]: [...prev[subreddit], ...result.posts],
+        };
+      });
+      setNextPosts((prev) => {
+        return {
+          ...prev,
+          [subreddit]: result.nextPostsId,
+        };
+      });
     } catch (error) {
       // TODO: handle error
     }
   };
 
   useEffect(() => {
-    fetchPosts();
+    // Fetch posts when user has typed in new search term
+    // or if it's first load and there are no persisted posts.
+    if (searchTerm !== prevSearchTerm || !posts) {
+      fetchPosts();
+    }
   }, [subreddit, searchTerm]);
 
   if (error) {

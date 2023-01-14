@@ -1,5 +1,5 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import useLocalStorageState from "./hooks/useLocalStorageState";
 import PostRoute from "./routes/PostRoute/PostRoute";
@@ -24,6 +24,11 @@ function App() {
     []
   );
   const [searchTerm, setSearchTerm] = useState("");
+  const [prevSearchTerm, setPrevSearchTerm] = useState("");
+
+  useEffect(() => {
+    setPrevSearchTerm(searchTerm);
+  }, [searchTerm]);
 
   const handleAddSubreddit = (subreddit) => {
     setFavoriteSubreddits((prev) => [...prev, subreddit]);
@@ -51,7 +56,12 @@ function App() {
         },
         {
           path: "r/:subreddit",
-          element: <SubredditRoute searchTerm={searchTerm} />,
+          element: (
+            <SubredditRoute
+              searchTerm={searchTerm}
+              prevSearchTerm={prevSearchTerm}
+            />
+          ),
         },
         {
           path: "r/:subreddit/comments/:commentId",
