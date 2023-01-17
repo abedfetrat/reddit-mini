@@ -9,10 +9,15 @@ import Posts from "./Posts";
 
 function SubredditRoute({ searchTerm, prevSearchTerm }) {
   const { subreddit } = useParams();
-  const [allPosts, setAllPosts] = useSessionStorageState("posts", {});
-  const [nextPosts, setNextPosts] = useSessionStorageState("nextPosts", {});
-  const posts = allPosts[subreddit];
-  const nextPostsId = nextPosts[subreddit];
+  const [posts, setPosts] = useSessionStorageState("posts", []);
+  const [nextPostsId, setNextPostsId] = useSessionStorageState(
+    "nextPostsId",
+    null
+  );
+  const [prevSubreddit, setPrevSubreddit] = useSessionStorageState(
+    "subreddit",
+    null
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -21,18 +26,8 @@ function SubredditRoute({ searchTerm, prevSearchTerm }) {
     setError(null);
     try {
       const result = await fetchSubredditPosts(subreddit, searchTerm, null);
-      setAllPosts((prev) => {
-        return {
-          ...prev,
-          [subreddit]: result.posts,
-        };
-      });
-      setNextPosts((prev) => {
-        return {
-          ...prev,
-          [subreddit]: result.nextPostsId,
-        };
-      });
+      setPosts(result.posts);
+      setNextPostsId(result.nextPostsId);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -47,29 +42,18 @@ function SubredditRoute({ searchTerm, prevSearchTerm }) {
         searchTerm,
         nextPostsId
       );
-      setAllPosts((prev) => {
-        return {
-          ...prev,
-          [subreddit]: [...prev[subreddit], ...result.posts],
-        };
-      });
-      setNextPosts((prev) => {
-        return {
-          ...prev,
-          [subreddit]: result.nextPostsId,
-        };
-      });
+      setPosts((prev) => [...prev, ...result.posts]);
+      setNextPostsId(result.nextPostsId);
     } catch (error) {
       // TODO: handle error
     }
   };
 
   useEffect(() => {
-    // Fetch posts when user has typed in new search term
-    // or if it's first load and there are no persisted posts.
-    if (searchTerm !== prevSearchTerm || !posts) {
+    if (subreddit !== prevSubreddit || searchTerm !== prevSearchTerm) {
       fetchPosts();
     }
+    setPrevSubreddit(subreddit);
   }, [subreddit, searchTerm]);
 
   if (error) {
