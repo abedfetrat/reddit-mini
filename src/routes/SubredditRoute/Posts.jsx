@@ -49,7 +49,7 @@ function Posts({ posts = [], hasMore, isLoading, onLoadMore }) {
     >
       <List disablePadding sx={{ mb: 4 }}>
         {posts.map((post, index) => (
-          <ListItem key={post.id} disableGutters>
+          <ListItem key={`${post.id}-${index}`} disableGutters>
             <Post
               post={post}
               onClick={() =>
