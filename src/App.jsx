@@ -21,7 +21,7 @@ const theme = createTheme({
 function App() {
   const [favoriteSubreddits, setFavoriteSubreddits] = useLocalStorageState(
     "favoriteSubreddits",
-    []
+    ["popular", "pics", "webdev"]
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [prevSearchTerm, setPrevSearchTerm] = useState("");
