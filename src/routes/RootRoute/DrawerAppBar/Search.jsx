@@ -5,6 +5,7 @@ import InputBase from "@mui/material/InputBase";
 import { alpha, styled } from "@mui/material/styles";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useSearchTerm } from "../../../providers/SearchTermProvider";
 
 const StyledSearch = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,12 +54,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function Search({ setSearchTerm }) {
+function Search() {
   const { subreddit } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const timeoutRef = useRef();
   const [text, setText] = useState("");
+  const [searchTerm, setSearchTerm] = useSearchTerm();
 
   useEffect(() => {
     if (timeoutRef.current) {
@@ -71,7 +73,7 @@ function Search({ setSearchTerm }) {
 
   const handleChange = ({ target }) => {
     setText(target.value);
-    // If currently not in subreddit route, then route to it. 
+    // If currently not in subreddit route, then route to it.
     if (subreddit && location.pathname !== `/r/${subreddit}`) {
       navigate(`r/${subreddit}`);
     }

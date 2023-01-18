@@ -8,12 +8,7 @@ import Search from "./Search";
 
 export const drawerWidth = 240;
 
-function DrawerAppBar({
-  favoriteSubreddits,
-  setSearchTerm,
-  onAddSubreddit,
-  onRemoveSubreddit,
-}) {
+function DrawerAppBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -39,16 +34,13 @@ function DrawerAppBar({
           >
             <MenuIcon />
           </IconButton>
-          <Search setSearchTerm={setSearchTerm} />
+          <Search />
         </Toolbar>
       </AppBar>
       <Drawer
         drawerWidth={drawerWidth}
         mobileOpen={mobileOpen}
         onDrawerToggle={handleDrawerToggle}
-        favoriteSubreddits={favoriteSubreddits}
-        onAddSubreddit={onAddSubreddit}
-        onRemoveSubreddit={onRemoveSubreddit}
       />
     </>
   );

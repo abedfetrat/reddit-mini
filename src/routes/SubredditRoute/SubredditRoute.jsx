@@ -4,11 +4,17 @@ import { useParams } from "react-router-dom";
 import Center from "../../components/Center";
 import Error from "../../components/Error";
 import useSessionStorageState from "../../hooks/useSessionStorageState";
+import {
+  usePreviousSearchTerm,
+  useSearchTerm,
+} from "../../providers/SearchTermProvider";
 import { fetchSubredditPosts } from "../../utils/api";
 import Posts from "./Posts";
 
-function SubredditRoute({ searchTerm, prevSearchTerm }) {
+function SubredditRoute() {
   const { subreddit } = useParams();
+  const [searchTerm, setSearchTerm] = useSearchTerm();
+  const prevSearchTerm = usePreviousSearchTerm();
   const [posts, setPosts] = useSessionStorageState("posts", []);
   const [nextPostsId, setNextPostsId] = useSessionStorageState(
     "nextPostsId",

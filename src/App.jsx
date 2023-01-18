@@ -1,7 +1,7 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import useLocalStorageState from "./hooks/useLocalStorageState";
+import FavoriteSubredditsProvider from "./providers/FavoriteSubredditsProvider";
+import SearchTermProvider from "./providers/SearchTermProvider";
 import PostRoute from "./routes/PostRoute/PostRoute";
 import NoSelection from "./routes/RootRoute/NoSelection";
 import RootRoute from "./routes/RootRoute/RootRout";
@@ -19,36 +19,10 @@ const theme = createTheme({
 });
 
 function App() {
-  const [favoriteSubreddits, setFavoriteSubreddits] = useLocalStorageState(
-    "favoriteSubreddits",
-    ["popular", "pics", "webdev"]
-  );
-  const [searchTerm, setSearchTerm] = useState("");
-  const [prevSearchTerm, setPrevSearchTerm] = useState("");
-
-  useEffect(() => {
-    setPrevSearchTerm(searchTerm);
-  }, [searchTerm]);
-
-  const handleAddSubreddit = (subreddit) => {
-    setFavoriteSubreddits((prev) => [...prev, subreddit]);
-  };
-
-  const handleRemoveSubreddit = (subreddit) => {
-    setFavoriteSubreddits((prev) => prev.filter((r) => r !== subreddit));
-  };
-
   const router = createBrowserRouter([
     {
       path: "/",
-      element: (
-        <RootRoute
-          favoriteSubreddits={favoriteSubreddits}
-          setSearchTerm={setSearchTerm}
-          onAddSubreddit={handleAddSubreddit}
-          onRemoveSubreddit={handleRemoveSubreddit}
-        />
-      ),
+      element: <RootRoute />,
       children: [
         {
           index: true,
@@ -56,12 +30,7 @@ function App() {
         },
         {
           path: "r/:subreddit",
-          element: (
-            <SubredditRoute
-              searchTerm={searchTerm}
-              prevSearchTerm={prevSearchTerm}
-            />
-          ),
+          element: <SubredditRoute />,
         },
         {
           path: "r/:subreddit/comments/:commentId",
@@ -75,7 +44,11 @@ function App() {
     <>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-        <RouterProvider router={router} />
+        <FavoriteSubredditsProvider>
+          <SearchTermProvider>
+            <RouterProvider router={router} />
+          </SearchTermProvider>
+        </FavoriteSubredditsProvider>
       </ThemeProvider>
     </>
   );

@@ -3,22 +3,11 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 import DrawerAppBar, { drawerWidth } from "./DrawerAppBar/DrawerAppBar";
 import ScrollTop from "./ScrollTop";
 
-function RootRoute({
-  favoriteSubreddits,
-  searchTerm,
-  setSearchTerm,
-  onAddSubreddit,
-  onRemoveSubreddit,
-}) {
+function RootRoute() {
   return (
     <>
       <Box sx={{ display: "flex" }}>
-        <DrawerAppBar
-          favoriteSubreddits={favoriteSubreddits}
-          setSearchTerm={setSearchTerm}
-          onAddSubreddit={onAddSubreddit}
-          onRemoveSubreddit={onRemoveSubreddit}
-        />
+        <DrawerAppBar />
         <Box
           component="main"
           sx={{
