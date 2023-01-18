@@ -28,7 +28,10 @@ function FavoriteSubredditsProvider({ children }) {
 function favoriteSubredditsReducer(favoriteSubreddits, action) {
   switch (action.type) {
     case "added": {
-      return [...favoriteSubreddits, action.subreddit];
+      if (!favoriteSubreddits.includes(action.subreddit)) {
+        return [...favoriteSubreddits, action.subreddit];
+      }
+      return favoriteSubreddits;
     }
     case "removed": {
       return favoriteSubreddits.filter((fav) => fav !== action.subreddit);
