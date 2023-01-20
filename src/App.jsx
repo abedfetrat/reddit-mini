@@ -3,6 +3,7 @@ import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import store, { persistor } from "./app/store";
+import ErrorComponent from "./routes/ErrorComponent";
 import PostRoute from "./routes/PostRoute/PostRoute";
 import NoSelection from "./routes/RootRoute/NoSelection";
 import RootRoute from "./routes/RootRoute/RootRout";
@@ -38,6 +39,7 @@ function App() {
           element: <PostRoute />,
         },
       ],
+      errorElement: <ErrorComponent />
     },
   ]);
 
