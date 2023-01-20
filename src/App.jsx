@@ -1,7 +1,8 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import store from "./app/store";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./app/store";
 import PostRoute from "./routes/PostRoute/PostRoute";
 import NoSelection from "./routes/RootRoute/NoSelection";
 import RootRoute from "./routes/RootRoute/RootRout";
@@ -45,7 +46,9 @@ function App() {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <RouterProvider router={router} />
+          <PersistGate loading={null} persistor={persistor}>
+            <RouterProvider router={router} />
+          </PersistGate>
         </Provider>
       </ThemeProvider>
     </>
