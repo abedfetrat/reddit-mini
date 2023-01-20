@@ -1,10 +1,11 @@
+import { configureStore } from "@reduxjs/toolkit";
 import favoriteSubredditsReducer from "./favoriteSubredditsSlice";
-
-const { configureStore } = require("@reduxjs/toolkit");
+import searchTermReducer from "./searchTermSlice";
 
 const store = configureStore({
     reducer: {
-        favoriteSubreddits: favoriteSubredditsReducer
+        favoriteSubreddits: favoriteSubredditsReducer,
+        searchTerm: searchTermReducer,
     }
 });
 

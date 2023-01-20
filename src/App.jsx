@@ -2,7 +2,6 @@ import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import store from "./app/store";
-import SearchTermProvider from "./providers/SearchTermProvider";
 import PostRoute from "./routes/PostRoute/PostRoute";
 import NoSelection from "./routes/RootRoute/NoSelection";
 import RootRoute from "./routes/RootRoute/RootRout";
@@ -46,9 +45,7 @@ function App() {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <SearchTermProvider>
-            <RouterProvider router={router} />
-          </SearchTermProvider>
+          <RouterProvider router={router} />
         </Provider>
       </ThemeProvider>
     </>

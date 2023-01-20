@@ -1,20 +1,19 @@
 import { Container } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { updatePrevTerm } from "../../app/searchTermSlice";
 import Center from "../../components/Center";
 import Error from "../../components/Error";
 import useSessionStorageState from "../../hooks/useSessionStorageState";
-import {
-  usePreviousSearchTerm,
-  useSearchTerm,
-} from "../../providers/SearchTermProvider";
 import { fetchSubredditPosts } from "../../utils/api";
 import Posts from "./Posts";
 
 function SubredditRoute() {
   const { subreddit } = useParams();
-  const [searchTerm, setSearchTerm] = useSearchTerm();
-  const prevSearchTerm = usePreviousSearchTerm();
+  const dispatch = useDispatch();
+  const searchTerm = useSelector((state) => state.searchTerm.current);
+  const prevSearchTerm = useSelector((state) => state.searchTerm.previous);
   const [posts, setPosts] = useSessionStorageState("posts", []);
   const [nextPostsId, setNextPostsId] = useSessionStorageState(
     "nextPostsId",
@@ -58,6 +57,7 @@ function SubredditRoute() {
   useEffect(() => {
     if (subreddit !== prevSubreddit || searchTerm !== prevSearchTerm) {
       fetchPosts();
+      dispatch(updatePrevTerm());
     }
     setPrevSubreddit(subreddit);
   }, [subreddit, searchTerm]);
