@@ -3,7 +3,7 @@ import { Button, Typography } from "@mui/material";
 import { Link, useRouteError } from "react-router-dom";
 import Center from "../components/Center";
 
-function ErrorComponent() {
+function ErrorElement() {
   const error = useRouteError();
 
   return (
@@ -33,4 +33,4 @@ function ErrorComponent() {
   );
 }
 
-export default ErrorComponent;
+export default ErrorElement;
