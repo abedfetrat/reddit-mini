@@ -1,7 +1,9 @@
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import FavoriteSubredditsProvider from "./providers/FavoriteSubredditsProvider";
-import SearchTermProvider from "./providers/SearchTermProvider";
+import { PersistGate } from "redux-persist/integration/react";
+import store, { persistor } from "./app/store";
+import ErrorElement from "./routes/ErrorElement";
 import PostRoute from "./routes/PostRoute/PostRoute";
 import NoSelection from "./routes/RootRoute/NoSelection";
 import RootRoute from "./routes/RootRoute/RootRout";
@@ -37,6 +39,7 @@ function App() {
           element: <PostRoute />,
         },
       ],
+      errorElement: <ErrorElement />
     },
   ]);
 
@@ -44,11 +47,11 @@ function App() {
     <>
       <CssBaseline />
       <ThemeProvider theme={theme}>
-        <FavoriteSubredditsProvider>
-          <SearchTermProvider>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
             <RouterProvider router={router} />
-          </SearchTermProvider>
-        </FavoriteSubredditsProvider>
+          </PersistGate>
+        </Provider>
       </ThemeProvider>
     </>
   );

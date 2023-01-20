@@ -22,18 +22,19 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import logo from "../../../assets/logo.svg";
 import {
-  useFavoriteSubreddits,
-  useFavoriteSubredditsDispatch,
-} from "../../../providers/FavoriteSubredditsProvider";
+  addSubreddit,
+  removeSubreddit,
+} from "../../../app/favoriteSubredditsSlice";
+import logo from "../../../assets/logo.svg";
 
 function Drawer({ drawerWidth, mobileOpen, onDrawerToggle }) {
   const { subreddit: selectedSubreddit } = useParams();
   const navigate = useNavigate();
-  const dispatch = useFavoriteSubredditsDispatch();
-  const favoriteSubreddits = useFavoriteSubreddits();
+  const dispatch = useDispatch();
+  const favoriteSubreddits = useSelector((state) => state.favoriteSubreddits);
   const [isManage, setIsManage] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [subredditNameText, setSubredditNameText] = useState("");
@@ -45,7 +46,7 @@ function Drawer({ drawerWidth, mobileOpen, onDrawerToggle }) {
   const handleAddSubreddit = () => {
     if (subredditNameText.length > 0) {
       const subreddit = subredditNameText.toLowerCase().replace(/\s+/g, "");
-      dispatch({ type: "added", subreddit });
+      dispatch(addSubreddit(subreddit));
       setSubredditNameText("");
       toggleAddForm();
       navigate(`r/${subreddit}`);
@@ -56,7 +57,7 @@ function Drawer({ drawerWidth, mobileOpen, onDrawerToggle }) {
   };
 
   const handleRemoveSubreddit = (subreddit) => {
-    dispatch({ type: "removed", subreddit });
+    dispatch(removeSubreddit(subreddit));
     if (selectedSubreddit === subreddit) {
       navigate("/");
     }

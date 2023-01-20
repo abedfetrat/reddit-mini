@@ -1,65 +1,34 @@
 import { Container } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import {
+  fetchMorePosts,
+  fetchPosts,
+  updateSubreddit
+} from "../../app/postsSlice";
+import { updatePrevTerm } from "../../app/searchTermSlice";
 import Center from "../../components/Center";
 import Error from "../../components/Error";
-import useSessionStorageState from "../../hooks/useSessionStorageState";
-import {
-  usePreviousSearchTerm,
-  useSearchTerm,
-} from "../../providers/SearchTermProvider";
-import { fetchSubredditPosts } from "../../utils/api";
 import Posts from "./Posts";
 
 function SubredditRoute() {
   const { subreddit } = useParams();
-  const [searchTerm, setSearchTerm] = useSearchTerm();
-  const prevSearchTerm = usePreviousSearchTerm();
-  const [posts, setPosts] = useSessionStorageState("posts", []);
-  const [nextPostsId, setNextPostsId] = useSessionStorageState(
-    "nextPostsId",
-    null
-  );
-  const [prevSubreddit, setPrevSubreddit] = useSessionStorageState(
-    "subreddit",
-    null
-  );
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const fetchPosts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const result = await fetchSubredditPosts(subreddit, searchTerm, null);
-      setPosts(result.posts);
-      setNextPostsId(result.nextPostsId);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError(error);
-    }
-  };
-
-  const fetchMorePosts = async () => {
-    try {
-      const result = await fetchSubredditPosts(
-        subreddit,
-        searchTerm,
-        nextPostsId
-      );
-      setPosts((prev) => [...prev, ...result.posts]);
-      setNextPostsId(result.nextPostsId);
-    } catch (error) {
-      // TODO: handle error
-    }
-  };
+  const dispatch = useDispatch();
+  const searchTerm = useSelector((state) => state.searchTerm.current);
+  const prevSearchTerm = useSelector((state) => state.searchTerm.previous);
+  const posts = useSelector((state) => state.posts.posts);
+  const nextPostsId = useSelector((state) => state.posts.nextPostsId);
+  const prevSubreddit = useSelector((state) => state.posts.subreddit);
+  const loading = useSelector((state) => state.posts.loading);
+  const error = useSelector((state) => state.posts.error);
 
   useEffect(() => {
     if (subreddit !== prevSubreddit || searchTerm !== prevSearchTerm) {
-      fetchPosts();
+      dispatch(fetchPosts({ subreddit, searchTerm }));
+      dispatch(updatePrevTerm());
+      dispatch(updateSubreddit(subreddit));
     }
-    setPrevSubreddit(subreddit);
   }, [subreddit, searchTerm]);
 
   if (error) {
@@ -67,7 +36,7 @@ function SubredditRoute() {
       <Center>
         <Error
           text={`Could not load posts for subreddit ${subreddit}`}
-          retry={fetchPosts}
+          retry={() => dispatch(fetchPosts({ subreddit, searchTerm }))}
         />
       </Center>
     );
@@ -79,7 +48,7 @@ function SubredditRoute() {
         posts={posts}
         hasMore={nextPostsId !== null}
         isLoading={loading}
-        onLoadMore={fetchMorePosts}
+        onLoadMore={() => dispatch(fetchMorePosts())}
       />
     </Container>
   );

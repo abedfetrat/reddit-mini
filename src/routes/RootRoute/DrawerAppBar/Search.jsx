@@ -4,8 +4,9 @@ import { IconButton } from "@mui/material";
 import InputBase from "@mui/material/InputBase";
 import { alpha, styled } from "@mui/material/styles";
 import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useSearchTerm } from "../../../providers/SearchTermProvider";
+import { changeTerm } from "../../../app/searchTermSlice";
 
 const StyledSearch = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,16 +59,16 @@ function Search() {
   const { subreddit } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const timeoutRef = useRef();
   const [text, setText] = useState("");
-  const [searchTerm, setSearchTerm] = useSearchTerm();
 
   useEffect(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
     timeoutRef.current = setTimeout(() => {
-      setSearchTerm(text);
+      dispatch(changeTerm(text));
     }, 500);
   }, [text]);
 
