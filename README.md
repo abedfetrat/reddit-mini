@@ -13,7 +13,7 @@ The data are fetched from the Reddit JSON API.
 I started by getting familiar with the Reddit API. I made research by reading upon the documentation and analyzing the returned JSON data. <br />
 After I had an understanding of how the data is structured and how to consume the API, I started to code the data fetching logic inorder to fetch the data the app needed. <br />
 Now that I had the data, I started with building the UI with help of Material UI components to quickly build a functional UI. <br />
-Once I had a fully functional app I replaced the apps statemanagment with Redux.  
+Once I had a fully functional app I replaced the apps state managment with Redux.  
 
 ## Built with
 
@@ -29,7 +29,7 @@ With this project I learned to use the Redux library with Redux Toolkit for mana
 
 - Authenticate the user with Reddit inorder to be able to vote and comment on posts. 
 - Authenticate the user inorder to be able to view all of the comments of a post. 
-- Optimize rendering the list of post when there are many posts loaded in the DOM. Use something like React Window.  
+- Optimize rendering the list of post when there are many posts loaded in the DOM. Use a library such as React Window / React Virtualized.  
 
 ## Author
 
